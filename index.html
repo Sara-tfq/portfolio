@@ -1,0 +1,1403 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sara Taoufiq — Design, IA &amp; Systèmes</title>
+<meta name="description" content="Portfolio de Sara Taoufiq — Ingénieure IA & MLOps, Polytech Nice Sophia. Design, IA & quelques systèmes.">
+<link href="https://api.fontshare.com/v2/css?f[]=clash-display@600,700&f[]=satoshi@300,400,500,700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #F2EEE8;
+  --text: #0D0D0D;
+  --accent: #8B5CF6;
+  --accent-light: #A78BFA;
+  --card-bg: #FFFFFF;
+  --card-border: #E5E1DB;
+  --muted: #6B6560;
+  --radius: 16px;
+  --section-gap: 64px;
+  --container: 1140px;
+  --px: 56px;
+}
+
+html { scroll-behavior: smooth; cursor: none; }
+
+body {
+  font-family: 'Satoshi', -apple-system, sans-serif;
+  font-weight: 400;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  overflow-x: hidden;
+  cursor: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+a, button, input, textarea { cursor: none; }
+
+/* ===== 3D BG CANVAS ===== */
+#bg3d {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ===== CURSOR ===== */
+.cursor-dot {
+  position: fixed; top: 0; left: 0;
+  width: 8px; height: 8px;
+  background: var(--accent);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 99999;
+  mix-blend-mode: difference;
+}
+.cursor-ring {
+  position: fixed; top: 0; left: 0;
+  width: 40px; height: 40px;
+  border: 1.5px solid var(--accent);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 99998;
+  transition: transform 0.15s ease, width 0.3s, height 0.3s, border-color 0.3s;
+}
+.cursor-ring.hover {
+  width: 60px; height: 60px;
+  border-color: var(--accent-light);
+  background: rgba(139,92,246,0.08);
+}
+
+/* ===== REVEALS ===== */
+.reveal {
+  opacity: 0; transform: translateY(36px);
+  transition: opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1);
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-left {
+  opacity: 0; transform: translateX(-50px);
+  transition: opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1);
+}
+.reveal-left.visible { opacity: 1; transform: translateX(0); }
+.reveal-right {
+  opacity: 0; transform: translateX(50px);
+  transition: opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1);
+}
+.reveal-right.visible { opacity: 1; transform: translateX(0); }
+.reveal-scale {
+  opacity: 0; transform: scale(0.93);
+  transition: opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1);
+}
+.reveal-scale.visible { opacity: 1; transform: scale(1); }
+
+/* ===== NAV ===== */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  padding: 18px var(--px);
+  display: flex; justify-content: space-between; align-items: center;
+  backdrop-filter: blur(20px);
+  background: rgba(242,238,232,0.8);
+  transition: all 0.4s ease;
+}
+nav.scrolled { padding: 12px var(--px); box-shadow: 0 1px 0 var(--card-border); }
+.nav-logo {
+  font-family: 'Clash Display', sans-serif; font-weight: 700;
+  font-size: 1.15rem; color: var(--text); text-decoration: none; letter-spacing: -0.02em;
+}
+.nav-logo span { color: var(--accent); }
+.nav-links { display: flex; gap: 32px; list-style: none; }
+.nav-links a {
+  font-family: 'Satoshi', sans-serif; font-size: 0.85rem; font-weight: 500;
+  color: var(--muted); text-decoration: none; transition: color 0.3s; position: relative;
+}
+.nav-links a::after {
+  content: ''; position: absolute; bottom: -4px; left: 0; right: 0;
+  height: 2px; background: var(--accent); transform: scaleX(0); transition: transform 0.3s;
+}
+.nav-links a:hover { color: var(--text); }
+.nav-links a:hover::after { transform: scaleX(1); }
+.nav-menu-btn {
+  display: none; background: none; border: none;
+  width: 32px; height: 32px; flex-direction: column; justify-content: center; gap: 6px;
+}
+.nav-menu-btn span { display: block; height: 2px; background: var(--text); border-radius: 2px; transition: all 0.3s; }
+.nav-menu-btn span:nth-child(1) { width: 24px; }
+.nav-menu-btn span:nth-child(2) { width: 16px; }
+.mobile-nav {
+  display: none; position: fixed; inset: 0; z-index: 999;
+  background: var(--bg); flex-direction: column; justify-content: center; align-items: center;
+  gap: 36px; opacity: 0; pointer-events: none; transition: opacity 0.4s;
+}
+.mobile-nav.open { opacity: 1; pointer-events: all; }
+.mobile-nav a {
+  font-family: 'Clash Display', sans-serif; font-size: 2rem; font-weight: 700;
+  color: var(--text); text-decoration: none;
+}
+
+/* ===== HERO ===== */
+.hero {
+  position: relative; height: 100vh;
+  display: flex; flex-direction: column; justify-content: center; align-items: center;
+  padding: 0 var(--px); overflow: hidden; text-align: center; z-index: 1;
+}
+.hero-content { position: relative; z-index: 2; max-width: var(--container); width: 100%; }
+.hero-tagline {
+  font-family: 'Satoshi', sans-serif; font-size: 0.82rem; font-weight: 500;
+  color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase;
+  margin-bottom: 28px; display: inline-flex; align-items: center; gap: 10px;
+}
+.hero-tagline .pill-sm {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: var(--accent); color: #fff; padding: 4px 13px; border-radius: 20px;
+  font-size: 0.7rem; font-weight: 700; letter-spacing: 0.04em;
+}
+.hero-headline {
+  font-family: 'Clash Display', sans-serif; font-weight: 700;
+  font-size: clamp(3rem, 7.5vw, 6.2rem); line-height: 1.05;
+  letter-spacing: -0.04em; margin-bottom: 40px; color: var(--text);
+}
+.hero-headline .pill {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--accent); color: #fff; padding: 4px 26px; border-radius: 100px; white-space: nowrap;
+}
+.hero-headline .pill .star { font-size: 0.55em; }
+.hero-buttons { display: flex; justify-content: center; gap: 14px; }
+.hero-btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 14px 32px; border-radius: 100px;
+  font-family: 'Satoshi', sans-serif; font-size: 0.92rem; font-weight: 600;
+  text-decoration: none; transition: all 0.35s cubic-bezier(0.16,1,0.3,1);
+}
+.hero-btn.primary { background: var(--text); color: var(--bg); }
+.hero-btn.primary:hover { background: var(--accent); transform: translateY(-3px); box-shadow: 0 12px 40px rgba(139,92,246,0.25); }
+.hero-btn.secondary { background: var(--card-bg); color: var(--text); border: 1px solid var(--card-border); }
+.hero-btn.secondary:hover { border-color: var(--accent); transform: translateY(-3px); }
+.hero-scroll-hint {
+  position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%); z-index: 2;
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  color: var(--muted); font-size: 0.7rem; font-weight: 500;
+  letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.5;
+}
+.hero-scroll-hint .line { width: 1px; height: 32px; background: var(--muted); animation: scrollPulse 2s ease-in-out infinite; }
+@keyframes scrollPulse { 0%,100% { opacity: 0.3; transform: scaleY(0.5); } 50% { opacity: 1; transform: scaleY(1); } }
+
+/* ===== MARQUEE ===== */
+.marquee-section { padding: 28px 0; overflow: hidden; border-top: 1px solid var(--card-border); border-bottom: 1px solid var(--card-border); position: relative; z-index: 1; }
+.marquee-track { display: flex; animation: marquee 35s linear infinite; width: max-content; }
+.marquee-track:hover { animation-play-state: paused; }
+.marquee-item {
+  font-family: 'Clash Display', sans-serif; font-weight: 600; font-size: 1.2rem;
+  white-space: nowrap; padding: 0 36px; color: var(--muted); opacity: 0.4;
+  display: flex; align-items: center; gap: 36px;
+}
+.marquee-item .dot { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; flex-shrink: 0; }
+@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+/* ===== LAYOUT ===== */
+.container { max-width: var(--container); margin: 0 auto; padding: 0 var(--px); position: relative; z-index: 1; }
+.section-spacer { padding-top: var(--section-gap); padding-bottom: var(--section-gap); }
+.section-label {
+  font-family: 'Satoshi', sans-serif; font-size: 0.76rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.14em; color: var(--accent); margin-bottom: 14px;
+}
+.section-title {
+  font-family: 'Clash Display', sans-serif; font-weight: 700;
+  font-size: clamp(2rem, 4vw, 3rem); letter-spacing: -0.035em;
+  line-height: 1.1; margin-bottom: 36px;
+}
+
+/* (3D dividers between sections) */
+
+/* ===== STATS ===== */
+.stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.stat-card {
+  background: var(--card-bg); border: 1px solid var(--card-border);
+  border-radius: var(--radius); padding: 24px;
+  transition: transform 0.4s cubic-bezier(0.16,1,0.3,1), box-shadow 0.4s;
+}
+.stat-card:hover { transform: translateY(-4px); box-shadow: 0 14px 40px rgba(0,0,0,0.06); }
+.stat-value {
+  font-family: 'Clash Display', sans-serif; font-weight: 700;
+  font-size: 1.5rem; color: var(--accent); letter-spacing: -0.02em;
+}
+.stat-label { font-family: 'Satoshi', sans-serif; font-size: 0.8rem; color: var(--muted); margin-top: 4px; }
+
+/* ===== ABOUT ===== */
+.about-grid { display: grid; grid-template-columns: 3fr 2fr; gap: 48px; align-items: start; }
+.about-text { font-size: 1rem; font-weight: 300; line-height: 1.8; color: var(--text); }
+.about-text strong { font-weight: 700; color: var(--accent); }
+.about-langs { margin-top: 28px; display: flex; flex-wrap: wrap; gap: 10px; }
+.lang-pill {
+  background: var(--card-bg); border: 1px solid var(--card-border);
+  padding: 8px 16px; border-radius: 100px; font-size: 0.8rem; font-weight: 500;
+  display: flex; align-items: center; gap: 6px;
+}
+.lang-pill .flag { font-size: 1rem; }
+
+/* ===== PROJECTS ===== */
+.projects-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.project-card {
+  background: var(--card-bg); border: 1px solid var(--card-border);
+  border-radius: var(--radius); overflow: hidden;
+  transition: transform 0.5s cubic-bezier(0.16,1,0.3,1), box-shadow 0.5s;
+}
+.project-card:hover { transform: translateY(-6px); box-shadow: 0 20px 56px rgba(0,0,0,0.08); }
+.project-card.featured { grid-column: 1 / -1; }
+.project-card .browser-chrome {
+  background: #F8F7F6; padding: 10px 14px;
+  display: flex; align-items: center; gap: 8px;
+  border-bottom: 1px solid var(--card-border);
+}
+.browser-dots { display: flex; gap: 6px; }
+.browser-dots span { width: 10px; height: 10px; border-radius: 50%; }
+.browser-dots span:nth-child(1) { background: #FF5F57; }
+.browser-dots span:nth-child(2) { background: #FFBD2E; }
+.browser-dots span:nth-child(3) { background: #28CA42; }
+.browser-url {
+  flex: 1; background: var(--bg); border-radius: 6px;
+  padding: 5px 12px; font-family: 'Satoshi', sans-serif; font-size: 0.7rem;
+  color: var(--muted); margin-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.project-preview {
+  width: 100%; aspect-ratio: 16/9;
+  background: linear-gradient(135deg, #E8E4DE 0%, #DDD8D0 100%);
+  display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative;
+  cursor: none;
+}
+.project-preview input[type="file"] {
+  position: absolute; inset: 0; opacity: 0; cursor: none; z-index: 3;
+}
+.project-preview .upload-hint {
+  position: absolute; bottom: 10px; right: 10px;
+  background: rgba(0,0,0,0.5); color: #fff; padding: 4px 10px; border-radius: 8px;
+  font-size: 0.65rem; font-weight: 500; opacity: 0; transition: opacity 0.3s; z-index: 2;
+}
+.project-preview:hover .upload-hint { opacity: 1; }
+.project-preview img { width: 100%; height: 100%; object-fit: cover; }
+.project-preview-placeholder { display: flex; flex-direction: column; align-items: center; gap: 10px; color: var(--muted); font-size: 0.82rem; }
+.project-preview-placeholder .icon { font-size: 2.2rem; opacity: 0.3; }
+.project-body { padding: 22px 24px 26px; }
+.project-type {
+  font-family: 'Satoshi', sans-serif; font-size: 0.7rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); margin-bottom: 8px;
+}
+.project-name {
+  font-family: 'Clash Display', sans-serif; font-weight: 700;
+  font-size: 1.3rem; letter-spacing: -0.02em; margin-bottom: 10px;
+}
+.project-desc { font-size: 0.88rem; font-weight: 300; line-height: 1.7; color: var(--muted); margin-bottom: 16px; }
+.project-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+.project-tag {
+  background: var(--bg); padding: 4px 12px; border-radius: 100px;
+  font-family: 'Satoshi', sans-serif; font-size: 0.7rem; font-weight: 500; color: var(--muted);
+}
+.project-links { display: flex; gap: 14px; }
+.project-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: 'Satoshi', sans-serif; font-size: 0.82rem; font-weight: 600;
+  color: var(--accent); text-decoration: none; transition: gap 0.3s;
+}
+.project-link:hover { gap: 10px; }
+.project-link .arrow { transition: transform 0.3s; }
+.project-link:hover .arrow { transform: translateX(3px); }
+
+/* ===== STACK ===== */
+.stack-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+.stack-col {}
+.stack-category { margin-bottom: 28px; }
+.stack-category:last-child { margin-bottom: 0; }
+.stack-category-title {
+  font-family: 'Clash Display', sans-serif; font-weight: 600;
+  font-size: 0.95rem; margin-bottom: 12px; color: var(--text);
+}
+.stack-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+.stack-pill {
+  background: var(--card-bg); border: 1px solid var(--card-border);
+  padding: 8px 18px; border-radius: 100px;
+  font-family: 'Satoshi', sans-serif; font-size: 0.82rem; font-weight: 400;
+  transition: all 0.3s;
+}
+.stack-pill:hover { border-color: var(--accent); background: rgba(139,92,246,0.06); transform: translateY(-2px); }
+
+/* ===== HORIZONTAL TIMELINE ===== */
+.h-timeline-wrapper {
+  position: relative;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding-bottom: 20px;
+}
+.h-timeline-wrapper::-webkit-scrollbar { display: none; }
+
+.h-timeline {
+  display: flex;
+  gap: 0;
+  position: relative;
+  padding: 40px 0 30px;
+  min-width: max-content;
+}
+
+.h-timeline::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0; right: 0;
+  height: 2px;
+  background: var(--card-border);
+  transform: translateY(-50%);
+}
+
+.h-timeline-item {
+  position: relative;
+  flex-shrink: 0;
+  width: 280px;
+  padding: 0 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.h-timeline-item .dot {
+  width: 16px; height: 16px;
+  background: var(--bg);
+  border: 3px solid var(--card-border);
+  border-radius: 50%;
+  z-index: 2;
+  margin-bottom: 20px;
+  transition: all 0.4s;
+  flex-shrink: 0;
+}
+
+.h-timeline-item.major .dot {
+  width: 24px; height: 24px;
+  border-color: var(--accent);
+  background: var(--accent);
+  box-shadow: 0 0 0 8px rgba(139,92,246,0.2);
+}
+.h-timeline-item.major { width: 300px; }
+
+.h-timeline-item .date {
+  font-family: 'Satoshi', sans-serif;
+  font-size: 0.72rem; font-weight: 700;
+  color: var(--accent); margin-bottom: 6px;
+  letter-spacing: 0.02em;
+}
+
+.h-timeline-item .title {
+  font-family: 'Clash Display', sans-serif;
+  font-weight: 600; font-size: 0.95rem;
+  margin-bottom: 6px; line-height: 1.3;
+}
+.h-timeline-item.major .title {
+  font-size: 1.15rem; font-weight: 700; color: var(--text);
+}
+.h-timeline-item.major .date {
+  font-size: 0.8rem; color: var(--accent);
+}
+.h-timeline-item.major .desc {
+  font-size: 0.82rem; font-weight: 400; opacity: 1; color: var(--muted);
+}
+
+.h-timeline-item .desc {
+  font-size: 0.78rem; font-weight: 300;
+  color: var(--muted); line-height: 1.55;
+}
+
+.h-timeline-item .badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  margin-top: 8px; padding: 4px 12px;
+  background: rgba(139,92,246,0.1); color: var(--accent);
+  border-radius: 100px; font-size: 0.7rem; font-weight: 700;
+}
+
+/* Minor items: smaller, muted */
+.h-timeline-item.minor .title { font-size: 0.78rem; color: var(--muted); font-weight: 500; opacity: 0.6; }
+.h-timeline-item.minor .desc { font-size: 0.68rem; opacity: 0.4; }
+.h-timeline-item.minor .date { color: var(--muted); opacity: 0.4; font-size: 0.68rem; }
+.h-timeline-item.minor { width: 180px; }
+.h-timeline-item.minor .dot { width: 10px; height: 10px; border-width: 2px; }
+
+.h-timeline-scroll-hint {
+  text-align: center;
+  margin-top: 8px;
+  font-size: 0.72rem;
+  color: var(--muted);
+  opacity: 0.5;
+  font-weight: 400;
+}
+
+/* ===== CERTIFICATION ===== */
+.cert-card {
+  background: var(--card-bg); border: 1px solid var(--card-border);
+  border-radius: var(--radius); padding: 22px 28px;
+  display: flex; align-items: center; gap: 20px; margin-top: 36px;
+}
+.cert-icon {
+  width: 46px; height: 46px;
+  background: linear-gradient(135deg, var(--accent), #6D28D9);
+  border-radius: 12px; display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 1.2rem; flex-shrink: 0;
+}
+.cert-info { flex: 1; }
+.cert-name { font-family: 'Satoshi', sans-serif; font-weight: 700; font-size: 0.92rem; }
+.cert-status { font-size: 0.8rem; color: var(--accent); font-weight: 500; margin-top: 2px; }
+
+/* ===== LOISIRS ===== */
+.loisirs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 24px;
+}
+
+.loisir-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Satoshi', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text);
+  padding: 12px 24px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 100px;
+  transition: all 0.3s;
+}
+
+.loisir-item:hover {
+  border-color: var(--accent);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 28px rgba(0,0,0,0.05);
+}
+
+.loisir-item .emoji { font-size: 1.2rem; }
+
+/* ===== JEWELRY ===== */
+.jewelry-header {
+  display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px;
+}
+.jewelry-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--accent); color: #fff; padding: 8px 20px; border-radius: 100px;
+  font-family: 'Satoshi', sans-serif; font-size: 0.78rem; font-weight: 700;
+}
+.jewelry-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.jewelry-slot {
+  aspect-ratio: 1; background: var(--card-bg);
+  border: 2px dashed var(--card-border); border-radius: var(--radius);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 10px; transition: all 0.3s; position: relative; overflow: hidden;
+}
+.jewelry-slot:hover { border-color: var(--accent); background: rgba(139,92,246,0.03); }
+.jewelry-slot .upload-icon { font-size: 1.8rem; opacity: 0.25; }
+.jewelry-slot .upload-text { font-size: 0.78rem; color: var(--muted); }
+.jewelry-slot input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: none; }
+.jewelry-slot img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border-radius: calc(var(--radius) - 2px); }
+.jewelry-slot .remove-btn {
+  position: absolute; top: 8px; right: 8px; width: 26px; height: 26px;
+  background: rgba(0,0,0,0.6); color: #fff; border: none; border-radius: 50%;
+  font-size: 0.75rem; display: none; align-items: center; justify-content: center; z-index: 2;
+}
+.jewelry-slot:hover .remove-btn { display: flex; }
+.jewelry-note { margin-top: 20px; font-size: 0.85rem; font-weight: 300; color: var(--muted); font-style: italic; }
+
+/* ===== CONTACT ===== */
+.contact-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center;
+}
+.contact-left { text-align: left; }
+.contact-right { display: flex; flex-direction: column; align-items: flex-start; gap: 16px; }
+.contact-section { text-align: left; }
+.contact-headline {
+  font-family: 'Clash Display', sans-serif; font-weight: 700;
+  font-size: clamp(2.2rem, 4.5vw, 3.8rem); letter-spacing: -0.04em;
+  line-height: 1.1; margin-bottom: 20px;
+}
+.contact-sub { font-size: 1rem; font-weight: 300; color: var(--muted); max-width: 460px; margin: 0 auto 36px; line-height: 1.7; }
+.contact-email {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-family: 'Satoshi', sans-serif; font-size: 1rem; font-weight: 500;
+  color: var(--accent); text-decoration: none; padding: 14px 32px;
+  background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 100px;
+  transition: all 0.35s cubic-bezier(0.16,1,0.3,1);
+}
+.contact-email:hover { border-color: var(--accent); box-shadow: 0 10px 36px rgba(139,92,246,0.12); transform: translateY(-3px); }
+.contact-buttons { display: flex; justify-content: center; gap: 14px; margin-top: 22px; }
+.contact-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 14px 28px; border-radius: 100px;
+  font-family: 'Satoshi', sans-serif; font-size: 0.88rem; font-weight: 700;
+  text-decoration: none; transition: all 0.35s cubic-bezier(0.16,1,0.3,1);
+}
+.contact-btn.primary { background: var(--text); color: var(--bg); }
+.contact-btn.primary:hover { background: var(--accent); transform: translateY(-3px); }
+
+/* ===== PUBLICATION ===== */
+.pub-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  padding: 36px 32px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.4s cubic-bezier(0.16,1,0.3,1), box-shadow 0.4s;
+}
+.pub-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 4px; height: 100%;
+  background: linear-gradient(180deg, var(--accent), #6D28D9);
+  border-radius: 4px 0 0 4px;
+}
+.pub-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 48px rgba(0,0,0,0.07);
+}
+.pub-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(139,92,246,0.1); color: var(--accent);
+  padding: 5px 14px; border-radius: 100px;
+  font-family: 'Satoshi', sans-serif; font-size: 0.72rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.06em;
+  margin-bottom: 16px;
+}
+.pub-title {
+  font-family: 'Clash Display', sans-serif; font-weight: 700;
+  font-size: 1.2rem; line-height: 1.4; letter-spacing: -0.01em;
+  margin-bottom: 14px;
+}
+.pub-meta {
+  font-family: 'Satoshi', sans-serif; font-size: 0.82rem;
+  font-weight: 400; color: var(--muted); line-height: 1.6;
+  margin-bottom: 20px;
+}
+.pub-meta strong { font-weight: 700; color: var(--text); }
+.pub-link {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: 'Satoshi', sans-serif; font-size: 0.85rem; font-weight: 600;
+  color: var(--accent); text-decoration: none;
+  padding: 10px 22px; border: 1.5px solid var(--accent);
+  border-radius: 100px; transition: all 0.3s;
+}
+.pub-link:hover {
+  background: var(--accent); color: #fff;
+  transform: translateY(-2px);
+}
+
+/* (3D shapes in fixed bg canvas) */
+
+/* ===== FOOTER ===== */
+footer {
+  padding: 36px var(--px); text-align: center; font-size: 0.8rem;
+  color: var(--muted); border-top: 1px solid var(--card-border); margin-top: 48px; position: relative; z-index: 1;
+}
+footer .heart { color: var(--accent); }
+.footer-dream {
+  margin-top: 12px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--accent);
+  opacity: 0.8;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 900px) {
+  :root { --px: 24px; --section-gap: 44px; }
+  .nav-links { display: none; }
+  .nav-menu-btn { display: flex; }
+  .mobile-nav { display: flex; }
+  .hero { padding: 0 var(--px); }
+  .hero-headline { font-size: clamp(2.2rem, 9vw, 3.4rem); }
+  .hero-buttons { flex-direction: column; align-items: center; gap: 10px; }
+  .stats-row { grid-template-columns: 1fr; gap: 12px; }
+  .about-grid { grid-template-columns: 1fr; gap: 28px; }
+  .projects-grid { grid-template-columns: 1fr; }
+  .stack-grid { grid-template-columns: 1fr; gap: 20px; }
+  .contact-grid { grid-template-columns: 1fr; gap: 28px; }
+  .contact-right { align-items: flex-start; }
+  .jewelry-grid { grid-template-columns: repeat(2, 1fr); }
+  .jewelry-header { flex-direction: column; align-items: flex-start; gap: 16px; }
+  .loisirs { gap: 12px; }
+  .loisir-item { padding: 10px 18px; font-size: 0.85rem; }
+  .pub-card { padding: 24px 20px; }
+  .pub-title { font-size: 1.05rem; }
+}
+@media (max-width: 600px) {
+  :root { --px: 18px; --section-gap: 36px; }
+  .hero-headline { font-size: clamp(1.8rem, 8vw, 2.6rem); }
+  .marquee-item { font-size: 0.95rem; padding: 0 20px; }
+  .hero-scroll-hint { display: none; }
+  .cursor-dot, .cursor-ring { display: none; }
+  html, body, a, button, input, textarea { cursor: auto; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="bg3d"></canvas>
+
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">sara TAOUFIQ<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="#about">A propos</a></li>
+    <li><a href="#projects">Projets</a></li>
+    <li><a href="#stack">Stack</a></li>
+    <li><a href="#parcours">Parcours</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="nav-menu-btn" id="menuBtn" aria-label="Menu"><span></span><span></span></button>
+</nav>
+<div class="mobile-nav" id="mobileNav">
+  <a href="#about" onclick="closeMobileNav()">A propos</a>
+  <a href="#projects" onclick="closeMobileNav()">Projets</a>
+  <a href="#stack" onclick="closeMobileNav()">Stack</a>
+  <a href="#parcours" onclick="closeMobileNav()">Parcours</a>
+  <a href="#contact" onclick="closeMobileNav()">Contact</a>
+</div>
+
+<!-- ===================== HERO ===================== -->
+<section class="hero" id="hero">
+  <div class="hero-content">
+    <div class="hero-tagline reveal">
+      Design, <span class="pill-sm">&#10022; IA &#10022;</span> &amp; quelques systemes.
+    </div>
+    <h1 class="hero-headline reveal" style="transition-delay:0.1s">
+      Yapping about<br>
+      <span class="pill"><span class="star">&#10022;</span> tech <span class="star">&#10022;</span></span>,<br>
+      actually<br>
+      building it.
+    </h1>
+    <div class="hero-buttons reveal" style="transition-delay:0.2s">
+      <a href="#projects" class="hero-btn primary">Voir les projets &rarr;</a>
+      <a href="#contact" class="hero-btn secondary">Me contacter</a>
+    </div>
+  </div>
+  <div class="hero-scroll-hint"><span>Scroll</span><div class="line"></div></div>
+</section>
+
+<!-- MARQUEE 1 -->
+<div class="marquee-section">
+  <div class="marquee-track">
+    <span class="marquee-item">PyTorch <span class="dot"></span></span>
+    <span class="marquee-item">MLOps <span class="dot"></span></span>
+    <span class="marquee-item">Kubernetes <span class="dot"></span></span>
+    <span class="marquee-item">Next.js <span class="dot"></span></span>
+    <span class="marquee-item">RoBERTa <span class="dot"></span></span>
+    <span class="marquee-item">FastAPI <span class="dot"></span></span>
+    <span class="marquee-item">Qdrant <span class="dot"></span></span>
+    <span class="marquee-item">Three.js <span class="dot"></span></span>
+    <span class="marquee-item">Docker <span class="dot"></span></span>
+    <span class="marquee-item">Azure GPU <span class="dot"></span></span>
+    <span class="marquee-item">RLHF/DPO <span class="dot"></span></span>
+    <span class="marquee-item">React <span class="dot"></span></span>
+    <span class="marquee-item">PyTorch <span class="dot"></span></span>
+    <span class="marquee-item">MLOps <span class="dot"></span></span>
+    <span class="marquee-item">Kubernetes <span class="dot"></span></span>
+    <span class="marquee-item">Next.js <span class="dot"></span></span>
+    <span class="marquee-item">RoBERTa <span class="dot"></span></span>
+    <span class="marquee-item">FastAPI <span class="dot"></span></span>
+    <span class="marquee-item">Qdrant <span class="dot"></span></span>
+    <span class="marquee-item">Three.js <span class="dot"></span></span>
+    <span class="marquee-item">Docker <span class="dot"></span></span>
+    <span class="marquee-item">Azure GPU <span class="dot"></span></span>
+    <span class="marquee-item">RLHF/DPO <span class="dot"></span></span>
+    <span class="marquee-item">React <span class="dot"></span></span>
+  </div>
+</div>
+
+<!-- ===================== ABOUT ===================== -->
+<div class="container section-spacer" id="about">
+  <div class="about-grid">
+    <div class="reveal-left">
+      <p class="section-label">A propos</p>
+      <h2 class="section-title">Ingenieure. Buildeuse.<br>Chercheuse.</h2>
+      <p class="about-text">
+        Trois axes, un seul fil rouge : <strong>construire des choses qui comptent</strong>. Je cree des <strong>produits web</strong> de A a Z, je deploie des <strong>systemes IA en production</strong>, et je publie de la <strong>recherche academique</strong>. Ingenieure multidisciplinaire, pas juste etudiante.
+      </p>
+      <p class="about-text" style="margin-top:14px">
+        En cycle ingenieur <strong>IAID</strong> a Polytech Nice Sophia, en alternance chez <strong>Wildmoka/Backlight</strong> (12 mois) sur la segmentation video, le MLOps et la recherche semantique vectorielle.
+      </p>
+      <p class="about-text" style="margin-top:14px">
+        Je publie sur <strong>HAL Science</strong> en ontologie appliquee au sport, et j'ai stage 6 mois au <strong>laboratoire LAMHESS</strong> (Universite Cote d'Azur). Une publication, et ce ne sera pas la derniere.
+      </p>
+      <div class="about-langs">
+        <span class="lang-pill"><span class="flag">&#127474;&#127462;</span> Arabe natif</span>
+        <span class="lang-pill"><span class="flag">&#127467;&#127479;</span> Francais C2</span>
+        <span class="lang-pill"><span class="flag">&#127468;&#127463;</span> Anglais C1</span>
+      </div>
+    </div>
+    <div class="reveal-right">
+      <div class="stat-card" style="margin-bottom:14px">
+        <div class="stat-value">Etudiante 5A IAID</div>
+        <div class="stat-label">Polytech Nice Sophia</div>
+      </div>
+      <div class="stat-card" style="margin-bottom:14px">
+        <div class="stat-value">3eme / 108</div>
+        <div class="stat-label">MoroccoAI Hackathon</div>
+      </div>
+      <div class="stat-card" style="margin-bottom:14px">
+        <div class="stat-value">1er Prix</div>
+        <div class="stat-label">Competition Full Stack</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== PROJECTS ===================== -->
+<div class="container section-spacer" id="projects" style="padding-top: 20px;">
+  <p class="section-label reveal">Projets</p>
+  <h2 class="section-title reveal">Chaque projet est une<br>histoire a raconter.</h2>
+
+  <div class="projects-grid">
+
+    <!-- SeaTron (Featured) -->
+    <div class="project-card featured reveal-scale">
+      <div class="browser-chrome">
+        <div class="browser-dots"><span></span><span></span><span></span></div>
+        <div class="browser-url">seatron.game</div>
+      </div>
+      <div class="project-preview" data-project="seatron">
+        <img src="assets/images/Seatron.png" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="SeaTron Preview">
+        <div class="project-preview-placeholder" style="display:none"><span class="icon">&#9875;</span><span>Cliquer pour ajouter une image</span></div>
+        <input type="file" accept="image/*" onchange="handleProjectUpload(this, 'seatron')">
+        <span class="upload-hint">Changer l'image</span>
+      </div>
+      <div class="project-body">
+        <span class="project-type">Equipe x 3 · Web Game</span>
+        <h3 class="project-name">SeaTron</h3>
+        <p class="project-desc">
+          Deux Tron dans un monde pirate, en multijoueur. IA minimax avec 4 strategies (agressive, defensive, chokepoint, equilibre). Grille hexagonale SVG animee, mode local 1v1, mode online, mode vs AI. Systeme d'amis, chat global/prive, leaderboard Elo, shop de bateaux, 6 achievements deblocables, easter egg pirate historique. Auth JWT avec refresh tokens.
+        </p>
+        <div class="project-tags">
+          <span class="project-tag">WebSocket</span><span class="project-tag">IA Minimax</span>
+          <span class="project-tag">SVG Hex</span><span class="project-tag">JWT</span>
+          <span class="project-tag">Leaderboard Elo</span><span class="project-tag">Chat RT</span>
+          <span class="project-tag">Shop</span><span class="project-tag">Achievements</span>
+        </div>
+        <div class="project-links"><a href="https://drive.google.com/file/d/1u6f9ibY29LEOb7L-UjIfVDsDBv2le-SC/view?usp=sharing" target="_blank" rel="noopener" class="project-link">Demo video <span class="arrow">&rarr;</span></a></div>
+      </div>
+    </div>
+
+    <!-- Segmentation Video IA -->
+    <div class="project-card reveal" style="transition-delay:0.05s">
+      <div class="browser-chrome">
+        <div class="browser-dots"><span></span><span></span><span></span></div>
+        <div class="browser-url">wildmoka.ai/segmentation</div>
+      </div>
+      <div class="project-preview">
+        <img src="assets/images/Segmentation.jpeg" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="Segmentation IA">
+        <div class="project-preview-placeholder" style="display:none"><span class="icon">&#129302;</span><span>Cliquer pour ajouter une image</span></div>
+        <input type="file" accept="image/*" onchange="handleProjectUpload(this, 'segmentation')">
+        <span class="upload-hint">Changer l'image</span>
+      </div>
+      <div class="project-body">
+        <span class="project-type">MLOps · Alternance · En cours</span>
+        <h3 class="project-name">Segmentation Video IA</h3>
+        <p class="project-desc">
+          Plateforme de segmentation video automatique propulsee par IA. Fine-tuning RoBERTa-Large sur transcripts NBC News, F1 ~ 0.9648. Deploye Azure GPU Tesla T4 + FastAPI. Recherche semantique Qdrant + BGE-M3 + SPLADE.
+        </p>
+        <div class="project-tags">
+          <span class="project-tag">RoBERTa</span><span class="project-tag">Azure GPU</span>
+          <span class="project-tag">Qdrant</span><span class="project-tag">BGE-M3</span><span class="project-tag">FastAPI</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- PromptFeed -->
+    <div class="project-card reveal" style="transition-delay:0.1s">
+      <div class="browser-chrome">
+        <div class="browser-dots"><span></span><span></span><span></span></div>
+        <div class="browser-url">promptfeed-eight.vercel.app</div>
+      </div>
+      <div class="project-preview">
+        <img src="assets/images/PromptFeed.png" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="PromptFeed">
+        <div class="project-preview-placeholder" style="display:none"><span class="icon">&#128172;</span><span>Cliquer pour ajouter une image</span></div>
+        <input type="file" accept="image/*" onchange="handleProjectUpload(this, 'promptfeed')">
+        <span class="upload-hint">Changer l'image</span>
+      </div>
+      <div class="project-body">
+        <span class="project-type">Side Project · Shipped</span>
+        <h3 class="project-name">PromptFeed</h3>
+        <p class="project-desc">
+          Reseau social pour partager ses conversations IA. Code genere avec IA, deploye, premiers retours positifs.
+        </p>
+        <div class="project-tags">
+          <span class="project-tag">Next.js 15</span><span class="project-tag">Prisma</span>
+          <span class="project-tag">Clerk</span><span class="project-tag">Neon</span><span class="project-tag">Vercel</span>
+        </div>
+        <div class="project-links"><a href="https://promptfeed-eight.vercel.app/" target="_blank" rel="noopener" class="project-link">Voir le site <span class="arrow">&rarr;</span></a><a href="https://www.canva.com/design/DAHDdYNlRfo/a8QFc6_1ySvrMsNJb_5Ezw/edit" target="_blank" rel="noopener" class="project-link">Apercu promo <span class="arrow">&rarr;</span></a></div>
+      </div>
+    </div>
+
+    <!-- Book of Internet -->
+    <div class="project-card reveal" style="transition-delay:0.05s">
+      <div class="browser-chrome">
+        <div class="browser-dots"><span></span><span></span><span></span></div>
+        <div class="browser-url">book-of-internet.vercel.app</div>
+      </div>
+      <div class="project-preview">
+        <img src="assets/images/TheBookOfInternet.png" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="Book of Internet">
+        <div class="project-preview-placeholder" style="display:none"><span class="icon">&#128214;</span><span>Cliquer pour ajouter une image</span></div>
+        <input type="file" accept="image/*" onchange="handleProjectUpload(this, 'bookofinternet')">
+        <span class="upload-hint">Changer l'image</span>
+      </div>
+      <div class="project-body">
+        <span class="project-type">Side Project · 24h Build</span>
+        <h3 class="project-name">The Book of Internet</h3>
+        <p class="project-desc">
+          Un inconnu. Un message. 1 dollar. Construit en moins de 24h pour tester Stripe. Resultat : 4 euros gagnes. Hall of Fame inclus.
+        </p>
+        <div class="project-tags">
+          <span class="project-tag">Stripe</span><span class="project-tag">Next.js</span><span class="project-tag">24h build</span>
+        </div>
+        <div class="project-links"><a href="https://book-of-internet.vercel.app/" target="_blank" rel="noopener" class="project-link">Voir le site <span class="arrow">&rarr;</span></a></div>
+      </div>
+    </div>
+
+    <!-- Quiz enfants autistes -->
+    <div class="project-card reveal" style="transition-delay:0.1s">
+      <div class="browser-chrome">
+        <div class="browser-dots"><span></span><span></span><span></span></div>
+        <div class="browser-url">quiz-accessibility.app</div>
+      </div>
+      <div class="project-preview">
+        <img src="assets/images/HarmoniKids.png" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="HarmoniKids">
+        <div class="project-preview-placeholder" style="display:none"><span class="icon">&#127942;</span><span>Cliquer pour ajouter une image</span></div>
+        <input type="file" accept="image/*" onchange="handleProjectUpload(this, 'quiz')">
+        <span class="upload-hint">Changer l'image</span>
+      </div>
+      <div class="project-body">
+        <span class="project-type">Hackathon · 1er Prix</span>
+        <h3 class="project-name">HarmoniKids</h3>
+        <p class="project-desc">
+          Plateforme de quiz pour enfants autistes. Interface volontairement enfantine et fun, analyse de donnees adaptee, experience pensee pour les enfants avec troubles cognitifs. 1er prix hackathon.
+        </p>
+        <div class="project-tags">
+          <span class="project-tag">Node.js</span><span class="project-tag">Accessibilite</span><span class="project-tag">UX enfants</span>
+        </div>
+        <div class="project-links"><a href="https://drive.google.com/file/d/1CB_dQ2bI1mCxnERhfVwR2X2T3YWq-lVz/view" target="_blank" rel="noopener" class="project-link">Demo video <span class="arrow">&rarr;</span></a></div>
+      </div>
+    </div>
+
+    <!-- SophiaEats -->
+    <div class="project-card reveal" style="transition-delay:0.1s">
+      <div class="browser-chrome">
+        <div class="browser-dots"><span></span><span></span><span></span></div>
+        <div class="browser-url">sophiaeats.app</div>
+      </div>
+      <div class="project-preview" data-project="sophiaeats">
+        <img src="assets/projects/sophiaeats.png" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="SophiaEats">
+        <div class="project-preview-placeholder" style="display:none"><span class="icon">&#127942;</span><span>Cliquer pour ajouter une image</span></div>
+        <input type="file" accept="image/*" onchange="handleProjectUpload(this, 'sophiaeats')">
+        <span class="upload-hint">Changer l'image</span>
+      </div>
+      <div class="project-body">
+        <span class="project-type">Projet Ecole · 1er Prix</span>
+        <h3 class="project-name">SophiaEats</h3>
+        <p class="project-desc">
+          Systeme de gestion de commandes et livraison sur campus. Elu meilleur projet par les entreprises au concours Full Stack Projects Showcase Sophia Antipolis.
+        </p>
+        <div class="project-tags">
+          <span class="project-tag">Angular</span><span class="project-tag">Node.js</span>
+          <span class="project-tag">PostgreSQL</span><span class="project-tag">Docker</span>
+          <span class="project-tag">Java</span><span class="project-tag">Maven</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- MoroccoAI InnovAI -->
+    <div class="project-card reveal" style="transition-delay:0.05s">
+      <div class="browser-chrome">
+        <div class="browser-dots"><span></span><span></span><span></span></div>
+        <div class="browser-url">innovai-morocco.app</div>
+      </div>
+      <div class="project-preview" data-project="moroccoai">
+        <img src="assets/projects/moroccoai.png" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="MoroccoAI">
+        <div class="project-preview-placeholder" style="display:none"><span class="icon">&#129353;</span><span>Cliquer pour ajouter une image</span></div>
+        <input type="file" accept="image/*" onchange="handleProjectUpload(this, 'moroccoai')">
+        <span class="upload-hint">Changer l'image</span>
+      </div>
+      <div class="project-body">
+        <span class="project-type">Hackathon · 3eme / 108</span>
+        <h3 class="project-name">InnovAI 2024</h3>
+        <p class="project-desc">
+          App web utilisant l'IA pour la detection du cancer de la peau. Classe 3eme sur 108 equipes au hackathon MoroccoAI.
+        </p>
+        <div class="project-tags">
+          <span class="project-tag">Django</span><span class="project-tag">Python</span>
+          <span class="project-tag">JavaScript</span><span class="project-tag">Deep Learning</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- CineSemantic -->
+    <div class="project-card reveal" style="transition-delay:0.05s">
+      <div class="browser-chrome">
+        <div class="browser-dots"><span></span><span></span><span></span></div>
+        <div class="browser-url">cinesemantic.app</div>
+      </div>
+      <div class="project-preview">
+        <img src="assets/images/CineSemantic.png" style="object-position: top;" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="CineSemantic">
+        <div class="project-preview-placeholder" style="display:none"><span class="icon">&#127916;</span><span>Cliquer pour ajouter une image</span></div>
+        <input type="file" accept="image/*" onchange="handleProjectUpload(this, 'cinesemantic')">
+        <span class="upload-hint">Changer l'image</span>
+      </div>
+      <div class="project-body">
+        <span class="project-type">IA · Recherche</span>
+        <h3 class="project-name">CineSemantic</h3>
+        <p class="project-desc">
+          Plateforme de recommandation de films style Netflix avec RAG et recherche semantique vectorielle.
+        </p>
+        <div class="project-tags">
+          <span class="project-tag">RAG</span><span class="project-tag">Vector Search</span><span class="project-tag">Python</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- The Alarm -->
+    <div class="project-card reveal" style="transition-delay:0.1s">
+      <div class="browser-chrome">
+        <div class="browser-dots"><span></span><span></span><span></span></div>
+        <div class="browser-url">alarm-challenge.app</div>
+      </div>
+      <div class="project-preview">
+        <img src="assets/images/ThealarmThatNevershutdown.png" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="The Alarm That Never Stops">
+        <div class="project-preview-placeholder" style="display:none"><span class="icon">&#9200;</span><span>Cliquer pour ajouter une image</span></div>
+        <input type="file" accept="image/*" onchange="handleProjectUpload(this, 'alarm')">
+        <span class="upload-hint">Changer l'image</span>
+      </div>
+      <div class="project-body">
+        <span class="project-type">Mobile · Concept</span>
+        <h3 class="project-name">The Alarm That Never Stops</h3>
+        <p class="project-desc">
+          Une alarme qui ne s'eteint que quand tu releves un defi. App mobile partiellement realisee.
+        </p>
+        <div class="project-tags">
+          <span class="project-tag">Mobile</span><span class="project-tag">Challenge-based</span>
+        </div>
+        <div class="project-links"><a href="https://docs.google.com/document/d/1HeBX4p8FrH4jF3wSnU-KkTYK-VpoNADxze4E1FWc8_A/edit" target="_blank" rel="noopener" class="project-link">Specs <span class="arrow">&rarr;</span></a></div>
+      </div>
+    </div>
+
+    <!-- Publication HAL Science -->
+    <div class="pub-card reveal" style="grid-column: 1 / -1;" id="publication">
+      <span class="pub-badge">&#128196; Recherche publiee · HAL Science</span>
+      <h3 class="pub-title">Conception et implementation d'une ontologie des facteurs psychosociaux lies aux attitudes et comportements alimentaires dysfonctionnels chez les sportifs</h3>
+      <p class="pub-meta">
+        <strong>Laboratoire LAMHESS</strong> · Universite Cote d'Azur<br>
+        Recherche en ontologie appliquee (OWL/Protege) aux desordres alimentaires dans le sport. Publie en 2025.
+      </p>
+      <div class="project-tags" style="margin-bottom:16px">
+        <span class="project-tag">OWL</span><span class="project-tag">Protege</span><span class="project-tag">Ontologie</span><span class="project-tag">Sport</span>
+      </div>
+      <a href="https://hal.science/hal-05392013/" target="_blank" rel="noopener" class="pub-link">
+        Lire sur HAL Science &rarr;
+      </a>
+    </div>
+
+    <!-- Clients NDA -->
+    <div class="project-card reveal" style="grid-column: 1 / -1;">
+      <div class="project-body" style="padding:24px">
+        <span class="project-type">Client Work · NDA</span>
+        <h3 class="project-name">Projets clients (confidentiels)</h3>
+        <p class="project-desc">
+          Site interne gestion colonies de vacances (client US) · App concurrente Uber Eats/Deliveroo (client FR). Reels, non publiables.
+        </p>
+        <div class="project-tags" style="margin-bottom:0">
+          <span class="project-tag">NDA</span><span class="project-tag">Full Stack</span><span class="project-tag">Client Work</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MARQUEE 2 -->
+<div class="marquee-section">
+  <div class="marquee-track" style="animation-direction: reverse;">
+    <span class="marquee-item">Design <span class="dot"></span></span>
+    <span class="marquee-item">Intelligence Artificielle <span class="dot"></span></span>
+    <span class="marquee-item">Systemes <span class="dot"></span></span>
+    <span class="marquee-item">Recherche <span class="dot"></span></span>
+    <span class="marquee-item">Produits <span class="dot"></span></span>
+    <span class="marquee-item">Ingenierie <span class="dot"></span></span>
+    <span class="marquee-item">Side Projects <span class="dot"></span></span>
+    <span class="marquee-item">Design <span class="dot"></span></span>
+    <span class="marquee-item">Intelligence Artificielle <span class="dot"></span></span>
+    <span class="marquee-item">Systemes <span class="dot"></span></span>
+    <span class="marquee-item">Recherche <span class="dot"></span></span>
+    <span class="marquee-item">Produits <span class="dot"></span></span>
+    <span class="marquee-item">Ingenierie <span class="dot"></span></span>
+    <span class="marquee-item">Side Projects <span class="dot"></span></span>
+  </div>
+</div>
+
+<!-- ===================== STACK ===================== -->
+<div class="container section-spacer" id="stack" style="padding-top: 20px;">
+  <p class="section-label reveal">Stack technique</p>
+  <h2 class="section-title reveal">Les outils que j'utilise<br>au quotidien.</h2>
+
+  <div class="stack-grid">
+    <div class="stack-col reveal-left" style="transition-delay:0.05s">
+      <div class="stack-category">
+        <h3 class="stack-category-title">ML / AI</h3>
+        <div class="stack-pills">
+          <span class="stack-pill">PyTorch</span><span class="stack-pill">RoBERTa</span>
+          <span class="stack-pill">DeBERTa</span><span class="stack-pill">BGE-M3</span>
+          <span class="stack-pill">SPLADE</span><span class="stack-pill">RLHF/DPO</span>
+          <span class="stack-pill">TensorFlow</span><span class="stack-pill">Keras</span>
+          <span class="stack-pill">XAI/LIME</span>
+        </div>
+      </div>
+      <div class="stack-category">
+        <h3 class="stack-category-title">MLOps &amp; Infra</h3>
+        <div class="stack-pills">
+          <span class="stack-pill">Kubernetes</span><span class="stack-pill">Azure GPU</span>
+          <span class="stack-pill">Qdrant</span><span class="stack-pill">FastAPI</span>
+          <span class="stack-pill">Docker</span><span class="stack-pill">Prometheus</span>
+          <span class="stack-pill">Grafana</span>
+        </div>
+      </div>
+    </div>
+    <div class="stack-col reveal-right" style="transition-delay:0.1s">
+      <div class="stack-category">
+        <h3 class="stack-category-title">Web</h3>
+        <div class="stack-pills">
+          <span class="stack-pill">Next.js 15</span><span class="stack-pill">React</span>
+          <span class="stack-pill">Angular</span><span class="stack-pill">Node.js</span>
+          <span class="stack-pill">Java/Spring</span><span class="stack-pill">PostgreSQL</span>
+          <span class="stack-pill">JavaScript</span><span class="stack-pill">HTML/CSS</span>
+          <span class="stack-pill">Git</span><span class="stack-pill">Maven</span>
+          <span class="stack-pill">SQL</span><span class="stack-pill">Postman</span>
+          <span class="stack-pill">Power BI</span>
+        </div>
+      </div>
+      <div class="stack-category">
+        <h3 class="stack-category-title">Langues</h3>
+        <div class="stack-pills">
+          <span class="stack-pill">&#127474;&#127462; Arabe natif</span>
+          <span class="stack-pill">&#127467;&#127479; Francais C2</span>
+          <span class="stack-pill">&#127468;&#127463; Anglais C1</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== BIJOUX & IA ===================== -->
+<div class="container section-spacer" id="jewelry" style="padding-top: 40px;">
+  <div class="jewelry-header reveal">
+    <div>
+      <p class="section-label">Bijoux &amp; IA</p>
+      <h2 class="section-title" style="margin-bottom:0">De l'idee au bijou, assistee<br>par l'intelligence artificielle.</h2>
+    </div>
+    <span class="jewelry-badge">&#10022; IA Generative · En cours</span>
+  </div>
+  <div class="jewelry-grid">
+    <div class="jewelry-slot reveal-scale" style="transition-delay:0.05s"><img src="assets/images/Bijoux/bague.png" alt="Bague"><button class="remove-btn" onclick="removeJewelry(0)">&times;</button></div>
+    <div class="jewelry-slot reveal-scale" style="transition-delay:0.1s"><img src="assets/images/Bijoux/bague sur main.png" alt="Bague sur main"><button class="remove-btn" onclick="removeJewelry(1)">&times;</button></div>
+    <div class="jewelry-slot reveal-scale" style="transition-delay:0.15s"><img src="assets/images/Bijoux/bague su support.png" alt="Bague sur support"><button class="remove-btn" onclick="removeJewelry(2)">&times;</button></div>
+    <div class="jewelry-slot reveal-scale" style="transition-delay:0.2s"><img src="assets/images/Bijoux/bague reflet.png" alt="Bague reflet"><button class="remove-btn" onclick="removeJewelry(3)">&times;</button></div>
+    <div class="jewelry-slot reveal-scale" style="transition-delay:0.25s"><img src="assets/images/Bijoux/Vertu-AI-Diamond-Ring-Floating-Light-1.webp" alt="Vertu AI Diamond Ring"><button class="remove-btn" onclick="removeJewelry(4)">&times;</button></div>
+    <div class="jewelry-slot reveal-scale" style="transition-delay:0.3s"><img src="assets/images/Bijoux/ZahraPic.png" alt="Zahra"><button class="remove-btn" onclick="removeJewelry(5)">&times;</button></div>
+  </div>
+  <p class="jewelry-note reveal">Stockage local navigateur uniquement.</p>
+</div>
+
+<!-- ===================== LOISIRS ===================== -->
+<div class="container" style="padding-bottom: var(--section-gap); text-align: center;">
+  <p class="section-label reveal">En dehors du code</p>
+  <div class="loisirs reveal" style="transition-delay:0.1s">
+    <div class="loisir-item"><span class="emoji">&#9823;</span> Echecs</div>
+    <div class="loisir-item"><span class="emoji">&#127929;</span> Piano</div>
+    <div class="loisir-item"><span class="emoji">&#127947;</span> Muscu</div>
+    <div class="loisir-item"><span class="emoji">&#129354;</span> Arts martiaux mixtes</div>
+    <div class="loisir-item"><span class="emoji">&#127911;</span> Production audiovisuelle</div>
+    <div class="loisir-item"><span class="emoji">&#129504;</span> Psychologie</div>
+  </div>
+</div>
+
+<!-- ===================== PARCOURS (horizontal) ===================== -->
+<div class="container section-spacer" id="parcours" style="padding-top: 0;">
+  <p class="section-label reveal">Parcours</p>
+  <h2 class="section-title reveal">Le voyage jusqu'ici.</h2>
+
+  <div class="h-timeline-wrapper reveal" style="transition-delay:0.1s">
+    <div class="h-timeline" id="hTimeline">
+
+      <div class="h-timeline-item major">
+        <div class="dot"></div>
+        <span class="date">2021 &ndash; 2023</span>
+        <span class="title">Classes Preparatoires PSI</span>
+        <span class="desc">Lycee La Residence, Maroc</span>
+      </div>
+
+      <div class="h-timeline-item major">
+        <div class="dot"></div>
+        <span class="date">2023</span>
+        <span class="title">Polytech Nice Sophia</span>
+        <span class="desc">Cycle ingenieur IAID</span>
+      </div>
+
+      <div class="h-timeline-item major">
+        <div class="dot"></div>
+        <span class="date">2023</span>
+        <span class="title">IA pour cybersecurite Cloud</span>
+        <span class="desc">Projet de recherche</span>
+      </div>
+
+      <div class="h-timeline-item major">
+        <div class="dot"></div>
+        <span class="date">2024</span>
+        <span class="title">MoroccoAI Hackathon</span>
+        <span class="desc">InnovAI 2024, app IA detection cancer de la peau (DJango, Python, JS)</span>
+        <span class="badge">&#129353; 3eme / 108</span>
+      </div>
+
+      <div class="h-timeline-item major">
+        <div class="dot"></div>
+        <span class="date">2024</span>
+        <span class="title">Full Stack Showcase</span>
+        <span class="desc">SophiaEats, elu meilleur projet (Angular/Node.js/PostgreSQL/Docker)</span>
+        <span class="badge">&#127942; 1er Prix</span>
+      </div>
+
+      <div class="h-timeline-item major">
+        <div class="dot"></div>
+        <span class="date">2024 &ndash; Present</span>
+        <span class="title">Backlight / Wildmoka</span>
+        <span class="desc">Ingenieure IA &amp; MLOps, segmentation video, recherche semantique vectorielle</span>
+      </div>
+
+      <div class="h-timeline-item major">
+        <div class="dot"></div>
+        <span class="date">2025</span>
+        <span class="title">Publication HAL Science</span>
+        <span class="desc">Ontologie des desordres alimentaires en sport, Labo LAMHESS, UCA</span>
+        <span class="badge">&#128196; Publie</span>
+      </div>
+
+    </div>
+    <p class="h-timeline-scroll-hint">&#8592; Glisser pour naviguer &#8594;</p>
+  </div>
+
+  <div class="cert-card reveal" style="transition-delay:0.1s">
+    <div class="cert-icon">&#9729;</div>
+    <div class="cert-info">
+      <p class="cert-name">Microsoft Azure AI Engineer Associate</p>
+      <p class="cert-status">En cours de preparation</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== CONTACT ===================== -->
+<div class="container section-spacer contact-section" id="contact">
+  <div class="contact-grid">
+    <div class="contact-left reveal-left">
+      <p class="section-label">Contact</p>
+      <h2 class="contact-headline">Parlons de votre<br>prochain projet.</h2>
+      <p class="contact-sub">
+        Opportunite, collaboration ou juste parler IA et echecs. Je lis tout.
+      </p>
+    </div>
+    <div class="contact-right reveal-right">
+      <a href="mailto:sara.taoufiq2003@gmail.com" class="contact-email">
+        <span>&#9993;</span> sara.taoufiq2003@gmail.com
+      </a>
+      <a href="#" class="contact-btn primary">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+        GitHub
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <p>&copy; 2025 Sara Taoufiq. Construit avec <span class="heart">&#9829;</span> et beaucoup de cafe.</p>
+  <p class="footer-dream">Mon reve : participer au AI4 de Las Vegas un jour &#127482;&#127480;</p>
+</footer>
+
+<!-- ===================== 3D BACKGROUND SHAPES ===================== -->
+<script type="module">
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
+
+(function() {
+  const canvas = document.getElementById('bg3d');
+  if (!canvas) return;
+
+  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setSize(window.innerWidth, window.innerHeight);
+
+  const scene = new THREE.Scene();
+  const cam = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 100);
+  cam.position.z = 14;
+
+  const accent = 0x8B5CF6;
+
+  // 4 shapes in corners, fixed, no scroll interaction
+  const defs = [
+    { geo: new THREE.TorusKnotGeometry(1.4, 0.5, 100, 16), x: -5.5, y: 3.5, z: -2, rx: 0.002, ry: 0.004 },  // top-left
+    { geo: new THREE.IcosahedronGeometry(1.8, 1),            x: 5.5,  y: 3.2, z: -3, rx: 0.003, ry: 0.002 },  // top-right
+    { geo: new THREE.OctahedronGeometry(1.6, 0),             x: -5,   y: -3.5, z: -2, rx: 0.004, ry: 0.003 }, // bottom-left
+    { geo: new THREE.DodecahedronGeometry(1.5, 0),           x: 5.8,  y: -3.2, z: -3, rx: 0.002, ry: 0.005 }, // bottom-right
+  ];
+
+  const shapes = defs.map(d => {
+    const wire = new THREE.Mesh(d.geo, new THREE.MeshBasicMaterial({
+      color: accent, wireframe: true, transparent: true, opacity: 0.18,
+    }));
+    const fill = new THREE.Mesh(d.geo, new THREE.MeshBasicMaterial({
+      color: accent, transparent: true, opacity: 0.04,
+    }));
+    const g = new THREE.Group();
+    g.add(wire); g.add(fill);
+    g.position.set(d.x, d.y, d.z);
+    g.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, 0);
+    scene.add(g);
+    return { wire, fill, rx: d.rx, ry: d.ry };
+  });
+
+  function animate() {
+    requestAnimationFrame(animate);
+    shapes.forEach(s => {
+      s.wire.rotation.x += s.rx;
+      s.wire.rotation.y += s.ry;
+      s.fill.rotation.copy(s.wire.rotation);
+    });
+    renderer.render(scene, cam);
+  }
+  animate();
+
+  window.addEventListener('resize', () => {
+    cam.aspect = window.innerWidth / window.innerHeight;
+    cam.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+})();
+</script>
+
+<script>
+// ——— Custom Cursor ———
+const dot = document.getElementById('cursorDot');
+const ring = document.getElementById('cursorRing');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', (e) => { mx = e.clientX; my = e.clientY; dot.style.transform = `translate(${mx-4}px, ${my-4}px)`; });
+function animateRing() { rx += (mx-rx)*0.15; ry += (my-ry)*0.15; ring.style.transform = `translate(${rx-20}px, ${ry-20}px)`; requestAnimationFrame(animateRing); }
+animateRing();
+document.querySelectorAll('a, button, .project-card, .stack-pill, .stat-card, .jewelry-slot, .loisir-item').forEach(el => {
+  el.addEventListener('mouseenter', () => ring.classList.add('hover'));
+  el.addEventListener('mouseleave', () => ring.classList.remove('hover'));
+});
+
+// ——— Nav ———
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => { navbar.classList.toggle('scrolled', window.scrollY > 50); });
+const menuBtn = document.getElementById('menuBtn');
+const mobileNav = document.getElementById('mobileNav');
+let menuOpen = false;
+menuBtn.addEventListener('click', () => { menuOpen = !menuOpen; mobileNav.classList.toggle('open', menuOpen); });
+function closeMobileNav() { menuOpen = false; mobileNav.classList.remove('open'); }
+
+// ——— Scroll Reveal ———
+const revealEls = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale');
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+revealEls.forEach(el => obs.observe(el));
+
+// ——— Horizontal Timeline drag scroll ———
+const tlWrapper = document.querySelector('.h-timeline-wrapper');
+if (tlWrapper) {
+  let isDown = false, startX, scrollLeft;
+  tlWrapper.addEventListener('mousedown', e => { isDown = true; startX = e.pageX - tlWrapper.offsetLeft; scrollLeft = tlWrapper.scrollLeft; });
+  tlWrapper.addEventListener('mouseleave', () => { isDown = false; });
+  tlWrapper.addEventListener('mouseup', () => { isDown = false; });
+  tlWrapper.addEventListener('mousemove', e => {
+    if (!isDown) return;
+    e.preventDefault();
+    const x = e.pageX - tlWrapper.offsetLeft;
+    tlWrapper.scrollLeft = scrollLeft - (x - startX) * 1.5;
+  });
+}
+
+// ——— Jewelry upload (localStorage) ———
+const JK = 'portfolio_jewelry_images';
+function getJI() { try { return JSON.parse(localStorage.getItem(JK)) || {}; } catch { return {}; } }
+function saveJI(imgs) { localStorage.setItem(JK, JSON.stringify(imgs)); }
+function handleJewelryUpload(input, i) {
+  const f = input.files[0]; if (!f) return;
+  const r = new FileReader();
+  r.onload = e => { const imgs = getJI(); imgs[i] = e.target.result; saveJI(imgs); renderJS(i, e.target.result); };
+  r.readAsDataURL(f);
+}
+function removeJewelry(i) { const imgs = getJI(); delete imgs[i]; saveJI(imgs); clearJS(i); }
+function renderJS(i, url) {
+  const s = document.querySelectorAll('.jewelry-slot')[i]; if (!s) return;
+  let img = s.querySelector('img');
+  if (!img) { img = document.createElement('img'); s.appendChild(img); }
+  img.src = url; img.alt = `Design ${i+1}`;
+  s.querySelector('.remove-btn').style.display = 'flex';
+}
+function clearJS(i) {
+  const s = document.querySelectorAll('.jewelry-slot')[i]; if (!s) return;
+  const img = s.querySelector('img'); if (img) img.remove();
+  s.querySelector('.remove-btn').style.display = 'none';
+  s.querySelector('input[type="file"]').value = '';
+}
+// ——— Project image upload (localStorage) ———
+const PK = 'portfolio_project_images';
+function getPI() { try { return JSON.parse(localStorage.getItem(PK)) || {}; } catch { return {}; } }
+function savePI(imgs) { localStorage.setItem(PK, JSON.stringify(imgs)); }
+
+function handleProjectUpload(input, projectId) {
+  const f = input.files[0]; if (!f) return;
+  const r = new FileReader();
+  r.onload = e => {
+    const imgs = getPI();
+    imgs[projectId] = e.target.result;
+    savePI(imgs);
+    renderProjectImg(projectId, e.target.result);
+  };
+  r.readAsDataURL(f);
+}
+
+function renderProjectImg(projectId, dataUrl) {
+  const preview = document.querySelector(`.project-preview[data-project="${projectId}"]`);
+  if (!preview) return;
+  let img = preview.querySelector('img');
+  if (!img) { img = document.createElement('img'); preview.insertBefore(img, preview.firstChild); }
+  img.src = dataUrl;
+  img.alt = projectId;
+  img.style.display = '';
+  const placeholder = preview.querySelector('.project-preview-placeholder');
+  if (placeholder) placeholder.style.display = 'none';
+}
+
+// ——— Load all saved images on page load ———
+document.addEventListener('DOMContentLoaded', () => {
+  // Jewelry
+  const imgs = getJI();
+  Object.entries(imgs).forEach(([i, url]) => renderJS(parseInt(i), url));
+
+  // Projects
+  const pImgs = getPI();
+  Object.entries(pImgs).forEach(([id, url]) => renderProjectImg(id, url));
+});
+</script>
+
+</body>
+</html>
