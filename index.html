@@ -594,6 +594,40 @@ nav.scrolled { padding: 12px var(--px); box-shadow: 0 1px 0 var(--card-border); 
 
 /* (3D shapes in fixed bg canvas) */
 
+/* ===== EXPERIENCES ===== */
+.exp-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.exp-card {
+  background: var(--card-bg); border: 1px solid var(--card-border);
+  border-radius: var(--radius); padding: 24px;
+  transition: transform 0.4s cubic-bezier(0.16,1,0.3,1), box-shadow 0.4s;
+}
+.exp-card:hover { transform: translateY(-4px); box-shadow: 0 14px 40px rgba(0,0,0,0.06); }
+.exp-type {
+  font-family: 'Satoshi', sans-serif; font-size: 0.7rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); margin-bottom: 8px;
+}
+.exp-title {
+  font-family: 'Clash Display', sans-serif; font-weight: 700;
+  font-size: 1.1rem; letter-spacing: -0.02em; margin-bottom: 8px;
+}
+.exp-desc { font-size: 0.85rem; font-weight: 300; line-height: 1.7; color: var(--muted); }
+.badge-freelance {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: var(--text); color: var(--bg); padding: 4px 12px; border-radius: 100px;
+  font-family: 'Satoshi', sans-serif; font-size: 0.68rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.04em; margin-left: 8px;
+}
+.badge-chef {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: rgba(139,92,246,0.12); color: var(--accent); padding: 4px 12px; border-radius: 100px;
+  font-family: 'Satoshi', sans-serif; font-size: 0.68rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.04em;
+}
+.method-line { font-size: 0.78rem; font-weight: 500; color: var(--muted); margin-top: 8px; font-style: italic; }
+@media (max-width: 900px) {
+  .exp-grid { grid-template-columns: 1fr; }
+}
+
 /* ===== FOOTER ===== */
 footer {
   padding: 36px var(--px); text-align: center; font-size: 0.8rem;
@@ -776,6 +810,7 @@ footer .heart { color: var(--accent); }
       </div>
       <div class="project-body">
         <span class="project-type">Equipe x 3 · Web Game</span>
+        <span class="badge-chef">Chef de projet</span>
         <h3 class="project-name">SeaTron</h3>
         <p class="project-desc">
           Deux Tron dans un monde pirate, en multijoueur. IA minimax avec 4 strategies (agressive, defensive, chokepoint, equilibre). Grille hexagonale SVG animee, mode local 1v1, mode online, mode vs AI. Systeme d'amis, chat global/prive, leaderboard Elo, shop de bateaux, 6 achievements deblocables, easter egg pirate historique. Auth JWT avec refresh tokens.
@@ -786,7 +821,8 @@ footer .heart { color: var(--accent); }
           <span class="project-tag">Leaderboard Elo</span><span class="project-tag">Chat RT</span>
           <span class="project-tag">Shop</span><span class="project-tag">Achievements</span>
         </div>
-        <div class="project-links"><a href="https://drive.google.com/file/d/1u6f9ibY29LEOb7L-UjIfVDsDBv2le-SC/view?usp=sharing" target="_blank" rel="noopener" class="project-link">Demo video <span class="arrow">&rarr;</span></a></div>
+        <p class="method-line">Methode : Kanban, sprints hebdomadaires, Git branching strategy</p>
+        <div class="project-links" style="margin-top:12px"><a href="https://drive.google.com/file/d/1u6f9ibY29LEOb7L-UjIfVDsDBv2le-SC/view?usp=sharing" target="_blank" rel="noopener" class="project-link">Demo video <span class="arrow">&rarr;</span></a></div>
       </div>
     </div>
 
@@ -880,6 +916,7 @@ footer .heart { color: var(--accent); }
       </div>
       <div class="project-body">
         <span class="project-type">Hackathon · 1er Prix</span>
+        <span class="badge-chef">Chef de projet</span>
         <h3 class="project-name">HarmoniKids</h3>
         <p class="project-desc">
           Plateforme de quiz pour enfants autistes. Interface volontairement enfantine et fun, analyse de donnees adaptee, experience pensee pour les enfants avec troubles cognitifs. 1er prix hackathon.
@@ -887,7 +924,8 @@ footer .heart { color: var(--accent); }
         <div class="project-tags">
           <span class="project-tag">Node.js</span><span class="project-tag">Accessibilite</span><span class="project-tag">UX enfants</span>
         </div>
-        <div class="project-links"><a href="https://drive.google.com/file/d/1CB_dQ2bI1mCxnERhfVwR2X2T3YWq-lVz/view" target="_blank" rel="noopener" class="project-link">Demo video <span class="arrow">&rarr;</span></a></div>
+        <p class="method-line">Methode : gestion en conditions hackathon, delivery rapide</p>
+        <div class="project-links" style="margin-top:12px"><a href="https://drive.google.com/file/d/1CB_dQ2bI1mCxnERhfVwR2X2T3YWq-lVz/view" target="_blank" rel="noopener" class="project-link">Demo video <span class="arrow">&rarr;</span></a></div>
       </div>
     </div>
 
@@ -905,6 +943,7 @@ footer .heart { color: var(--accent); }
       </div>
       <div class="project-body">
         <span class="project-type">Projet Ecole · 1er Prix</span>
+        <span class="badge-chef">Chef de projet</span>
         <h3 class="project-name">SophiaEats</h3>
         <p class="project-desc">
           Systeme de gestion de commandes et livraison sur campus. Elu meilleur projet par les entreprises au concours Full Stack Projects Showcase Sophia Antipolis.
@@ -914,6 +953,7 @@ footer .heart { color: var(--accent); }
           <span class="project-tag">PostgreSQL</span><span class="project-tag">Docker</span>
           <span class="project-tag">Java</span><span class="project-tag">Maven</span>
         </div>
+        <p class="method-line">Methode : Kanban, gestion des taches, coordination equipe</p>
       </div>
     </div>
 
@@ -1094,6 +1134,13 @@ footer .heart { color: var(--accent); }
       </div>
     </div>
   </div>
+
+  <div class="loisirs reveal" style="margin-top:36px;">
+    <div class="loisir-item"><span class="emoji">&#129309;</span> Travail en equipe</div>
+    <div class="loisir-item"><span class="emoji">&#128203;</span> Management de projet</div>
+    <div class="loisir-item"><span class="emoji">&#9889;</span> Delivery rapide</div>
+    <div class="loisir-item"><span class="emoji">&#128483;</span> Communication</div>
+  </div>
 </div>
 
 <!-- ===================== BIJOUX & IA ===================== -->
@@ -1103,17 +1150,17 @@ footer .heart { color: var(--accent); }
       <p class="section-label">Bijoux &amp; IA</p>
       <h2 class="section-title" style="margin-bottom:0">De l'idee au bijou, assistee<br>par l'intelligence artificielle.</h2>
     </div>
-    <span class="jewelry-badge">&#10022; IA Generative · En cours</span>
+    <div style="display:flex;gap:10px;align-items:center;">
+      <span class="jewelry-badge">&#10022; IA Generative</span>
+      <span class="jewelry-badge" style="background:var(--text);">Freelance</span>
+    </div>
   </div>
+  <p style="font-size:0.9rem;color:var(--muted);margin-bottom:24px;font-weight:300;" class="reveal">Creation de visuels de bijoux generes par IA pour une page Instagram cliente.</p>
   <div class="jewelry-grid">
-    <div class="jewelry-slot reveal-scale" style="transition-delay:0.05s"><img src="assets/images/Bijoux/bague.png" alt="Bague"><button class="remove-btn" onclick="removeJewelry(0)">&times;</button></div>
-    <div class="jewelry-slot reveal-scale" style="transition-delay:0.1s"><img src="assets/images/Bijoux/bague sur main.png" alt="Bague sur main"><button class="remove-btn" onclick="removeJewelry(1)">&times;</button></div>
-    <div class="jewelry-slot reveal-scale" style="transition-delay:0.15s"><img src="assets/images/Bijoux/bague su support.png" alt="Bague sur support"><button class="remove-btn" onclick="removeJewelry(2)">&times;</button></div>
-    <div class="jewelry-slot reveal-scale" style="transition-delay:0.2s"><img src="assets/images/Bijoux/bague reflet.png" alt="Bague reflet"><button class="remove-btn" onclick="removeJewelry(3)">&times;</button></div>
-    <div class="jewelry-slot reveal-scale" style="transition-delay:0.25s"><img src="assets/images/Bijoux/Vertu-AI-Diamond-Ring-Floating-Light-1.webp" alt="Vertu AI Diamond Ring"><button class="remove-btn" onclick="removeJewelry(4)">&times;</button></div>
-    <div class="jewelry-slot reveal-scale" style="transition-delay:0.3s"><img src="assets/images/Bijoux/ZahraPic.png" alt="Zahra"><button class="remove-btn" onclick="removeJewelry(5)">&times;</button></div>
+    <div class="jewelry-slot reveal-scale" style="transition-delay:0.05s"><img src="assets/images/Bijoux/bague.png" alt="Bague"></div>
+    <div class="jewelry-slot reveal-scale" style="transition-delay:0.1s"><img src="assets/images/Bijoux/bague sur main.png" alt="Bague sur main"></div>
+    <div class="jewelry-slot reveal-scale" style="transition-delay:0.15s"><img src="assets/images/Bijoux/bague reflet.png" alt="Bague reflet"></div>
   </div>
-  <p class="jewelry-note reveal">Stockage local navigateur uniquement.</p>
 </div>
 
 <!-- ===================== LOISIRS ===================== -->
@@ -1198,6 +1245,30 @@ footer .heart { color: var(--accent); }
     <div class="cert-info">
       <p class="cert-name">Microsoft Azure AI Engineer Associate</p>
       <p class="cert-status">En cours de preparation</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== EXPERIENCES ===================== -->
+<div class="container section-spacer" id="experiences" style="padding-top: 20px;">
+  <p class="section-label reveal">Experiences</p>
+  <h2 class="section-title reveal">Au-dela du code.</h2>
+
+  <div class="exp-grid">
+    <div class="exp-card reveal" style="transition-delay:0.05s">
+      <span class="exp-type">Benevolat</span>
+      <h3 class="exp-title">Amnesty International</h3>
+      <p class="exp-desc">Engagement associatif pour les droits humains.</p>
+    </div>
+    <div class="exp-card reveal" style="transition-delay:0.1s">
+      <span class="exp-type">Job etudiant</span>
+      <h3 class="exp-title">Receptionniste Hotel</h3>
+      <p class="exp-desc">Accueil, gestion clientele, organisation.</p>
+    </div>
+    <div class="exp-card reveal" style="transition-delay:0.15s">
+      <span class="exp-type">Montage video<span class="badge-freelance">Freelance</span></span>
+      <h3 class="exp-title">Equipe Johny Harris</h3>
+      <p class="exp-desc">Mission freelance de montage et post-production de contenu tech a impact international.</p>
     </div>
   </div>
 </div>
